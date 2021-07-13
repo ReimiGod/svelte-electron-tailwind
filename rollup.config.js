@@ -1,14 +1,11 @@
-import svelte from "rollup-plugin-svelte";
-import resolve from "rollup-plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
+import css from "rollup-plugin-css-only";
 import livereload from "rollup-plugin-livereload";
+import svelte from "rollup-plugin-svelte";
 import { terser } from "rollup-plugin-terser";
-import postcss from "rollup-plugin-postcss";
+import sveltePreprocess from "svelte-preprocess";
 import alias from "@rollup/plugin-alias";
-
-// postcss plugins
-import postcssImport from "postcss-import";
-import postcssPresetEnv from "postcss-preset-env";
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -16,7 +13,7 @@ export default {
   input: "src/frontend/main.js",
   output: {
     sourcemap: true,
-    format: "umd",
+    format: "iife",
     name: "app",
     file: "public/assets/bundle.js",
   },
@@ -26,21 +23,14 @@ export default {
         // enable run-time checks when not in production
         dev: !production,
       },
-
-      emitCss: true,
+      preprocess: sveltePreprocess({
+        sourceMap: !production,
+        postcss: true,
+      }),
     }),
-
-    postcss({
-      plugins: [
-        postcssImport(),
-        postcssPresetEnv({
-          stage: 4,
-          browsers: "last 5 Chrome versions",
-        }),
-      ],
-      extract: true,
-      extensions: [".css"],
-    }),
+    // we'll extract any component CSS out into
+    // a separate file - better for performance
+    css({ output: "bundle.css" }),
 
     // define alias
     alias({
@@ -54,13 +44,12 @@ export default {
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
-    // some cases you'll need additional configuration —
+    // some cases you'll need additional configuration -
     // consult the documentation for details:
-    // https://github.com/rollup/rollup-plugin-commonjs
+    // https://github.com/rollup/plugins/tree/master/packages/commonjs
     resolve({
       browser: true,
-      dedupe: (importee) =>
-        importee === "svelte" || importee.startsWith("svelte/"),
+      dedupe: ["svelte"],
     }),
     commonjs(),
 
