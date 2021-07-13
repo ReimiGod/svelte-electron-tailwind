@@ -1,17 +1,31 @@
 
 # Logs
+.DS_Store
 .DS_*
 *.log
 logs
 yarn-debug.log*
 yarn-error.log*
 
-# Dependency directories
+
 node_modules
 
 # dotenv environment variables file
 .env
 .env.test
 
-# Svelte
+# Svelte 
 public/assets
+/public/build/
+
+
+/inputData
+/outputData
+/reports
+/dist
+/logs.json
+/scriptSource
+/pw-browsers
+/POUCHDB_DATABASE_LOGS.txt
+/Templates
+/scriptSource/temporary/**

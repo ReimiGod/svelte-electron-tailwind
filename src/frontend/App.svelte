@@ -1,14 +1,18 @@
 <script>
   const { ipcRenderer } = require("electron");
 
-  ipcRenderer.on("test", () => {
-    console.log("lala");
+  let test;
+
+  ipcRenderer.on("test", (e, data) => {
+    console.log("lala", data);
+    test = data;
   });
 </script>
 
 <main>
-  <h1>Svelte Electron!!!!!</h1>
+  <h1>Svelte Electron!</h1>
   <p>This is a template for building Electron apps with SvelteJS!!</p>
+  <pre>{JSON.stringify(test, null ,2)}</pre>
 </main>
 
 <style>

@@ -47,9 +47,8 @@ export default {
       resolve: ["", ".js", ".svelte"],
       entries: [
         { find: "~", replacement: "./" },
-        { find: "@", replacement: "src" },
-        { find: "@components", replacement: "src/components" },
-        { find: "@views", replacement: "src/views" },
+        { find: "@", replacement: "src/frontend" },
+        { find: "@components", replacement: "src/frontend/components" },
       ],
     }),
 

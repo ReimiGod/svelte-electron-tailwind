@@ -1,9 +1,14 @@
 const path = require("path");
 const url = require("url");
-const { app, BrowserWindow, protocol, screen } = require("electron");
-
-const argv = process.argv.slice(2);
-const isProduction = !argv.find((_) => _ === "--dev");
+const {
+  app,
+  BrowserWindow,
+  protocol,
+  screen,
+  ipcMain,
+  shell,
+} = require("electron");
+const { config, rootDirectory, isProduction } = require("./config");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -27,7 +32,7 @@ function reloadOnChange(mainWindow) {
     };
 
   const watcher = require("chokidar").watch(
-    path.join(__dirname, "../public/**"),
+    path.join(__dirname, "../../public/**"),
     { ignoreInitial: true }
   );
 
@@ -42,30 +47,25 @@ function createWindow() {
   // Create the browser window.
   const { width, height } = screen.getPrimaryDisplay().workAreaSize;
   mainWindow = new BrowserWindow({
-    icon: path.join(__dirname, "../public/icon.png"),
-
+    ...config.electronMainWindow,
     width: width / 1.25,
     height: height / 1.25,
-    webPreferences: {
-      contextIsolation: false,
-      nodeIntegration: true,
-      backgroundThrottling: false,
-      nodeIntegrationInWorker: true,
-      nodeIntegrationInSubFrames: true,
-      // enableRemoteModule: true,
-    },
   });
 
   mainWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, "../../public/index.html"),
+      pathname: config.webRoot,
       protocol: "file:",
       slashes: true,
     })
   );
 
   setTimeout(() => {
-    mainWindow.webContents.send("test");
+    mainWindow.webContents.send("test", {
+      dir: __dirname,
+      rootDirectory,
+      isProduction,
+    });
   }, 3000);
 
   const watcher = reloadOnChange(mainWindow);
