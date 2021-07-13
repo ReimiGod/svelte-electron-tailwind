@@ -1,33 +1,33 @@
-import svelte from 'rollup-plugin-svelte'
-import resolve from 'rollup-plugin-node-resolve'
-import commonjs from '@rollup/plugin-commonjs'
-import livereload from 'rollup-plugin-livereload'
-import { terser } from 'rollup-plugin-terser'
-import postcss from 'rollup-plugin-postcss'
-import alias from '@rollup/plugin-alias'
+import svelte from "rollup-plugin-svelte";
+import resolve from "rollup-plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
+import livereload from "rollup-plugin-livereload";
+import { terser } from "rollup-plugin-terser";
+import postcss from "rollup-plugin-postcss";
+import alias from "@rollup/plugin-alias";
 
 // postcss plugins
-import postcssImport from 'postcss-import'
-import postcssPresetEnv from 'postcss-preset-env'
+import postcssImport from "postcss-import";
+import postcssPresetEnv from "postcss-preset-env";
 
-const production = !process.env.ROLLUP_WATCH
+const production = !process.env.ROLLUP_WATCH;
 
 export default {
-  input: 'src/renderer.js',
+  input: "src/frontend/main.js",
   output: {
     sourcemap: true,
-    format: 'umd',
-    name: 'app',
-    file: 'public/assets/bundle.js'
+    format: "umd",
+    name: "app",
+    file: "public/assets/bundle.js",
   },
   plugins: [
     svelte({
       compilerOptions: {
         // enable run-time checks when not in production
-        dev: !production
+        dev: !production,
       },
 
-      emitCss: true
+      emitCss: true,
     }),
 
     postcss({
@@ -35,22 +35,22 @@ export default {
         postcssImport(),
         postcssPresetEnv({
           stage: 4,
-          browsers: 'last 5 Chrome versions'
-        })
+          browsers: "last 5 Chrome versions",
+        }),
       ],
       extract: true,
-      extensions: ['.css']
+      extensions: [".css"],
     }),
 
     // define alias
     alias({
-      resolve: ['', '.js', '.svelte'],
+      resolve: ["", ".js", ".svelte"],
       entries: [
-        { find: '~', replacement: './' },
-        { find: '@', replacement: 'src' },
-        { find: '@components', replacement: 'src/components' },
-        { find: '@views', replacement: 'src/views' }
-      ]
+        { find: "~", replacement: "./" },
+        { find: "@", replacement: "src" },
+        { find: "@components", replacement: "src/components" },
+        { find: "@views", replacement: "src/views" },
+      ],
     }),
 
     // If you have external dependencies installed from
@@ -60,19 +60,20 @@ export default {
     // https://github.com/rollup/rollup-plugin-commonjs
     resolve({
       browser: true,
-      dedupe: importee => importee === 'svelte' || importee.startsWith('svelte/')
+      dedupe: (importee) =>
+        importee === "svelte" || importee.startsWith("svelte/"),
     }),
     commonjs(),
 
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
-    !production && livereload('public'),
+    !production && livereload("public"),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
-    production && terser()
+    production && terser(),
   ],
   watch: {
-    clearScreen: false
-  }
-}
+    clearScreen: false,
+  },
+};

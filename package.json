@@ -4,17 +4,17 @@
   "description": "A template for building Electron apps with SvelteJS",
   "author": "Valmisson Grizorte - <missongrizorte@gmail.com>",
   "license": "MIT",
-  "main": "src/main.js",
+  "main": "src/electron/index.js",
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
     "dev": "run-p start:dev autobuild start:electron",
     "start:dev": "sirv public --single --dev",
-    "start:electron": "electron .",
+    "start:electron": "electron . --dev",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
-    "jslint": "eslint src/**",
-    "csslint": "stylelint src/**"
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "husky": {
     "hooks": {
@@ -34,14 +34,6 @@
     "chokidar": "^3.5.2",
     "electron": "^13.1.6",
     "electron-builder": "^22.11.7",
-    "eslint": "^7.30.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-svelte3": "^3.2.0",
-    "husky": "^7.0.1",
-    "lint-staged": "^11.0.0",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.3.5",
     "postcss-import": "14.0.2",
@@ -53,8 +45,28 @@
     "rollup-plugin-svelte": "^7.1.0",
     "rollup-plugin-terser": "^7.0.2",
     "sirv-cli": "^1.0.12",
-    "stylelint": "^13.13.1",
-    "stylelint-config-standard": "^22.0.0",
     "svelte": "^3.38.3"
+  },
+  "build": {
+    "appId": "gbpm-automation-tool-v2",
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "extraFiles": [
+      "reports",
+      "inputData",
+      "outputData",
+      "Templates",
+      "pw-browsers",
+      "scriptSource",
+      "docs",
+      "logs.json"
+    ]
   }
 }
