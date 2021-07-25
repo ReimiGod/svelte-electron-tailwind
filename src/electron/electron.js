@@ -1,29 +1,11 @@
 const path = require("path");
-const url = require("url");
-const {
-  app,
-  BrowserWindow,
-  protocol,
-  screen,
-  ipcMain,
-  shell,
-} = require("electron");
+
+const { app, BrowserWindow, screen } = require("electron");
 const { config, rootDirectory, isProduction } = require("./config");
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow;
-
-// Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([
-  {
-    scheme: "file",
-    privileges: {
-      secure: true,
-      standard: true,
-    },
-  },
-]);
 
 function reloadOnChange(mainWindow) {
   if (isProduction)
@@ -52,13 +34,7 @@ function createWindow() {
     height: height / 1.25,
   });
 
-  mainWindow.loadURL(
-    url.format({
-      pathname: config.webRoot,
-      protocol: "file:",
-      slashes: true,
-    })
-  );
+  mainWindow.loadFile(config.webRoot);
 
   setTimeout(() => {
     mainWindow.webContents.send("test", {
@@ -70,7 +46,11 @@ function createWindow() {
 
   const watcher = reloadOnChange(mainWindow);
 
+  //clean up
   mainWindow.on("closed", () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
     mainWindow = null;
     watcher.close();
   });
@@ -79,7 +59,13 @@ function createWindow() {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  // create the window
+  createWindow();
+  // include the ipc calls and bindings
+  const ipcElectronFunctions = require("./app/ipc/ipcElectronFunctions");
+  ipcElectronFunctions(app, mainWindow);
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {

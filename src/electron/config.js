@@ -16,13 +16,11 @@ const config = {
     icon: path.join(__dirname, "../../public/icon.png"),
     resizable: true,
     webPreferences: {
-      contextIsolation: false,
-      worldSafeExecuteJavaScript: false,
-      //   preload: path.join(__dirname, "preload.js"),
-      nodeIntegration: true,
+      contextIsolation: true,
+      worldSafeExecuteJavaScript: true,
+      preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: false,
       backgroundThrottling: false,
-      nodeIntegrationInWorker: true,
-      nodeIntegrationInSubFrames: true,
     },
   },
 };

@@ -1,10 +1,7 @@
 {
-  "name": "svelte-electron-template",
+  "name": "svelte-electron-tailwind-template",
   "version": "0.1.0",
-  "description": "A template for building Electron apps with SvelteJS",
-  "author": "Valmisson Grizorte - <missongrizorte@gmail.com>",
-  "license": "MIT",
-  "main": "src/electron/index.js",
+  "main": "src/electron/electron.js",
   "scripts": {
     "build": "rollup -c",
     "autobuild": "rollup -c -w",
@@ -15,17 +12,6 @@
     "postuninstall": "electron-builder install-app-deps",
     "pack": "electron-builder --dir",
     "dist": "electron-builder"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
-  "lint-staged": {
-    "src/**": [
-      "eslint --fix",
-      "stylelint --fix"
-    ]
   },
   "dependencies": {},
   "devDependencies": {
@@ -54,7 +40,7 @@
     "tailwindcss": "^2.2.4"
   },
   "build": {
-    "appId": "gbpm-automation-tool-v2",
+    "appId": "YOUR_APP_ID_IS_HERE",
     "win": {
       "target": [
         "nsis"
